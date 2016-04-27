@@ -1,0 +1,174 @@
+<head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<title>autoform test</title>
+	<link rel="shortcut icon" href="/favicon.png?v=2" />
+</head>
+
+<body>
+  {{> companyCreate}}
+</body>
+
+<template name="companyCreate">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-xs-12 col-md-6">
+
+                <h1>Ways to use aldeed:simpleschema</h1>
+                <hr/>
+                <h2>AutoForm Form and Validation</h2>
+
+                {{#autoForm collection="Companies" id="insertCompany" type="insert" class="autoform" resetOnSuccess=false}}
+
+                   {{> bsQuickField name="name" }}
+                   {{> bsQuickField name="isBreeder" type="boolean-select" trueLabel="Yes" falseLabel="No" }}
+                   {{> bsQuickField name="isReleaseSite" type="boolean-select" trueLabel="Yes" falseLabel="No" }}
+                   {{> bsQuickField name="isMLD" type="boolean-select" trueLabel="Yes" falseLabel="No" }}
+                   {{> bsQuickField name="isColdStorage" type="boolean-select" trueLabel="Yes" falseLabel="No" }}
+
+                   <div style="clear:both">
+                   {{> afQuickField name="facilityIds" }}
+                    </div>
+
+                    <div style="clear:both">
+                   {{> afQuickField name="deerIds" }}
+                    </div>
+
+                   <!-- here we shoehorn in a goofy UI-only field that's not actually part of the schema -->
+                   {{> addAnotherField }}
+
+                   <!-- this doesn't work, I think because the autoform adds the data-schema-key attribute
+                   {{> afQuickField name="addAnother" label="Add Another?" type="boolean-select" trueLabel="Yes" falseLabel="No" template="bootstrap3-horizontal" label-class="col-xs-5" input-col-class="col-xs-7"}}
+                    -->
+
+                   <input type="submit" class="btn btn-default btn-lg button-submit" value="Submit"/>
+                {{/autoForm}}
+
+                <hr/>
+                <h2>Manually Constructed Form and JQuery Validation</h2>
+                <form class="main-form" id="main-form-id">
+
+                    <!-- first attempt -->
+                    <!--div class="row form-group-inline">
+                        <div class="col-xs-5">
+                            <label for="name">Company Name</label>
+                        </div>
+                        <div class="col-xs-7">
+                            <input name="name" type="text" class="form-control" />
+                        </div>
+                    </div-->
+
+                    <!-- can just use bootstrap like this -->
+                    <!--div class="form-group row">
+                        <label class="col-xs-5 control-label" for="name">Name</label>
+                        <div class="col-xs-7">
+                            <input name="name" type="text" class="form-control" />
+                        </div>
+                    </div-->
+
+                    <!-- or create a helper to do the same thing as above -->
+                    {{> textInput name="name" label="Name" }}
+
+                    <div class="row form-group-inline">
+                        <div class="col-xs-8">
+                            <label for="isBreeder">Breeder</label>
+                        </div>
+                        <div class="col-xs-4">
+                            <select name="isBreeder" class="form-control">
+                                <option value="0" label="No"></option>
+                                <option value="1" label="Yes"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group-inline">
+                        <div class="col-xs-8">
+                            <label for="isReleaseSite">Release Site</label>
+                        </div>
+                        <div class="col-xs-4">
+                            <select name="isReleaseSite" class="form-control">
+                                <option value="0" label="No"></option>
+                                <option value="1" label="Yes"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group-inline">
+                        <div class="col-xs-8">
+                            <label for="isMLD">MLD</label>
+                        </div>
+                        <div class="col-xs-4">
+                            <select name="isMLD" class="form-control">
+                                <option value="0" label="No"></option>
+                                <option value="1" label="Yes"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group-inline">
+                        <div class="col-xs-8">
+                            <label for="isColdStorage">Cold Storage</label>
+                        </div>
+                        <div class="col-xs-4">
+                            <select name="isColdStorage" class="form-control">
+                                <option value="0" label="No"></option>
+                                <option value="1" label="Yes"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group-inline">
+                        <div class="col-xs-12">
+                            <textarea name="facilityIds" class="form-control"
+                            placeholder="Facility identifiers, one per line" rows="10"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="row form-group-inline">
+                        <div class="col-xs-12">
+                            <textarea name="deerIds" class="form-control"
+                            placeholder="Deer identifiers, one per line" rows="10"></textarea>
+                        </div>
+                    </div>
+
+                    <input type="submit" class="btn btn-default btn-lg button-submit" value="Submit"/>
+
+                </form>
+
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    </div>
+
+</template>
+
+<template name="textInput">
+    <div class="form-group row">
+        <label class="col-xs-5 control-label" for="{{this.name}}">{{this.label}}</label>
+        <div class="col-xs-7">
+            <input name="{{this.name}}" type="text" class="form-control" />
+        </div>
+    </div>
+</template>
+
+<template name="bsQuickField">
+        {{> afQuickField allArguments }}
+
+        {{!-- could generate the helper this way, with Template.dynamic, but it's not necessary --}}
+        {{!-- Template.dynamic template="afQuickField" data=allArguments --}}
+</template>
+
+<template name="addAnotherField">
+    <div class="form-group row">
+        <label class="col-xs-5 control-label" for="addAnother">Add Another?</label>
+        <div class="col-xs-7">
+        <select name="addAnother" class="form-control">
+            <option value="0" label="No"></option>
+            <option value="1" label="Yes"></option>
+        </select>
+        </div>
+    </div>
+</template>
